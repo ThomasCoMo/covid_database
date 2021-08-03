@@ -38,26 +38,7 @@ df_update = data_new.copy()
 connexion = mysql.connector.connect(host="localhost",user="machine",password="123456",database="SARS_COV_2")
 curseur = connexion.cursor()
 
-#for i in range(data_new.shape[0]):
-#	present = False
-#	for j in range(data_old.shape[0]):
-#		if data_new["dateRep"].loc[i]==data_old["dateRep"].loc[j]:
-#			if data_new["day"].loc[i]==data_old["day"].loc[j]:
-#				if data_new["month"].loc[i]==data_old["month"].loc[j]:
-#					if data_new["year"].loc[i]==data_old["year"].loc[j]:
-#						if data_new["cases"].loc[i]==data_old["cases"].loc[j]:
-#							if data_new["deaths"].loc[i]==data_old["deaths"].loc[j]:
-#								if data_new["countriesAndTerritories"].loc[i]==data_old["countriesAndTerritories"].loc[j]:
-#									if data_new["geoId"].loc[i]==data_old["geoId"].loc[j]:
-#										if data_new["countryterritoryCode"].loc[i]==data_old["countryterritoryCode"].loc[j]:
-#											if data_new["popData2020"].loc[i]==data_old["popData2020"].loc[j]:
-#												if data_new["continentExp"].loc[i]==data_old["continentExp"].loc[j]:
-#													present=True
-#	if present==True:
-#		continue
-#	else:
-#		request = "insert into data_per_day values (\'%s\',%i,%i,%i,%i,%i,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')"%(data_new["dateRep"].loc[i],data_new["day"].loc[i],data_new["month"].loc[i],data_new["year"].loc[i],data_new["cases"].loc[i],data_new["deaths"].loc[i],data_new["countriesAndTerritories"].loc[i],data_new["geoId"].loc[i],data_new["countryterritoryCode"].loc[i],data_new["popData2020"].loc[i],data_new["continentExp"].loc[i])
-#		print(request)
+
 fichier = open('insertion_update.sql',"w")
 
 for i in range(data_new.shape[0]):
@@ -80,11 +61,7 @@ connexion.commit()
 connexion.close()
 curseur.close()
 
-#request = 'select * from data_per_day where dateRep=\'02/08/2021\';'
-#curseur.execute(request)
-#resultat = curseur.fetchall()
-#for resust in resultat:
-#	print(resust)
+
 
 
 
