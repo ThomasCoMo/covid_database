@@ -26,3 +26,10 @@ python UI.py
 5. then select country and press button *select country and plot*, the windows is uptdated :
 ![2](https://user-images.githubusercontent.com/74672067/128043073-f152039f-a9af-4056-b5ac-b804ff886014.png)<br>
 6. you can select another country and press the same button it will update graphic.
+
+
+## Update
+to update data in database:
+```bash
+python update_data.py
+```
