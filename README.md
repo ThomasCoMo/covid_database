@@ -24,7 +24,7 @@ python UI.py
 
 ![1](https://user-images.githubusercontent.com/74672067/131140098-01961a19-090a-4b85-a319-5ff7cf073f7c.png)<br>
 5. then select country and press button *select country and plot*, the windows is uptdated :
-![2](https://user-images.githubusercontent.com/74672067/128043073-f152039f-a9af-4056-b5ac-b804ff886014.png)<br>
+![2](https://user-images.githubusercontent.com/74672067/131140185-82110328-9700-4a2e-b17e-ae138b93e46a.png)<br>
 6. you can select another country and press the same button it will update graphic.
 
 
