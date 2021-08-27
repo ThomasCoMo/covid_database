@@ -17,11 +17,15 @@ connexion = mysql.connector.connect(
 curseur = connexion.cursor()
 
 # get list of countries
-request = 'select countriesAndTerritories From data_per_day group by countriesAndTerritories;'
+#request = 'select countriesAndTerritories From data_per_day group by countriesAndTerritories;'
+request = 'select countriesAndTerritories, popData2020 From data_per_day group by countriesAndTerritories, popData2020;'
+
 curseur.execute(request)
-liste_countries = []
+liste_countries_pop = []
+dico_pop = {}
 for line in curseur:
-    liste_countries.append(line[0])
+    liste_countries_pop.append(line[0])
+    dico_pop[line[0]]=int(line[1])
 
 
 class Application(tk.Frame):
@@ -31,30 +35,38 @@ class Application(tk.Frame):
         self.pack()
         self.create_liste()
         self.pays = ""
+        self.create_caseacocher()
         self.create_button()
         self.liste_date = []
         self.liste_cases = []
         self.liste_deaths = []
+        self.Check=1
         self.isCanevas = False
 
     def create_liste(self):
         self.liste = Listbox(self)
-        for i in range(len(liste_countries)):
-            self.liste.insert(i, liste_countries[i])
+        for i in range(len(liste_countries_pop)):
+            self.liste.insert(i, liste_countries_pop[i])
         self.liste.grid(row=1,column=1)
+
+    def create_caseacocher(self):
+        self.ivCheck = IntVar()
+        self.ivCheck.set('1')
+        self.check_button = tk.Checkbutton(self,text='normalization',variable=self.ivCheck)
+        self.check_button.grid(row=2,column=1)
 
     def create_button(self):
         self.get_button = tk.Button(self)
         self.get_button["text"] = 'select country and plot'
         self.get_button["command"] = self.Execute
-        self.get_button.grid(row=2,column=1)
+        self.get_button.grid(row=3,column=1)
 
     def create_canevas(self):
         photo = PhotoImage(file='graph.png')
         self.canvas = Canvas(self,width=640, height=480)
         self.canvas.create_image(0, 0, anchor=NW, image=photo)
         self.canvas.image=photo
-        self.canvas.grid(row=3,column=1)
+        self.canvas.grid(row=4,column=1)
         self.isCanevas=True
         
     def get_values_to_plot(self):
@@ -64,15 +76,23 @@ class Application(tk.Frame):
         liste_deaths = []
         curseur.execute(request)
         liste_inter=[]
+        self.Check=self.ivCheck.get()
         for i in curseur:
             liste_inter.append([datetime.strptime(i[0], '%d/%m/%Y'),i[1],i[2]])
         liste_inter.sort()
         #print(liste_inter)
-        for line in liste_inter:
-            #print(line)
-            liste_date.append(line[0])
-            liste_cases.append(line[1])
-            liste_deaths.append(line[2])
+        if self.Check==1:
+            for line in liste_inter:
+                #print(line)
+                liste_date.append(line[0])
+                liste_cases.append(line[1]/dico_pop[self.pays]*100000)
+                liste_deaths.append(line[2]/dico_pop[self.pays]*100000)
+        if self.Check==0:
+            for line in liste_inter:
+                #print(line)
+                liste_date.append(line[0])
+                liste_cases.append(line[1])
+                liste_deaths.append(line[2])
         self.liste_date = liste_date
         self.liste_cases = liste_cases
         self.liste_deaths = liste_deaths
@@ -82,6 +102,12 @@ class Application(tk.Frame):
         fig = plt.figure()
         plt.plot(self.liste_date[1:],self.liste_cases[1:],'r-',label='cases')
         plt.plot(self.liste_date[1:],self.liste_deaths[1:],'b-',label='deaths')
+        if self.Check==1:
+            plt.title('number of cases and deaths in %s per 100000 inhabitants'%self.pays)
+        if self.Check==0:
+            plt.title('number of cases and deaths in %s'%self.pays)
+        plt.xlabel('dates')
+        plt.ylabel('number of cases/deaths')
         plt.legend()
         plt.gcf().autofmt_xdate()
         fig.savefig('graph.png')
@@ -112,4 +138,3 @@ class Application(tk.Frame):
 root=tk.Tk()
 app=Application(master=root)
 app.mainloop()
-
